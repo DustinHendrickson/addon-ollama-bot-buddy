@@ -1,0 +1,5 @@
+## Interface: 30300
+## Title: BotBuddy UI
+## Notes: Shows live bot state and reasoning
+BotBuddyUI.lua
+BotBuddyUI.xml

@@ -1,0 +1,77 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame name="BotBuddyStateFrame" parent="UIParent" movable="true" enableMouse="true" frameStrata="HIGH">
+        <Size><AbsDimension x="350" y="200"/></Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"/>
+        <Frames>
+            <!-- Title Bar for BotBuddyStateFrame -->
+            <Frame name="BotBuddyStateFrameTitleBar" parentKey="TitleBar" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+                <Size><AbsDimension x="0" y="24"/></Size>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark"/>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="BotBuddyStateFrameTitle" inherits="GameFontNormal" text="BotBuddy State">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="BotBuddyStateFrameText" inherits="GameFontHighlightSmall" text="Bot State will appear here">
+                    <Size><AbsDimension x="320" y="160"/></Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="15" y="-35"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="BotBuddyCommandFrame" parent="UIParent" movable="true" enableMouse="true" frameStrata="HIGH">
+        <Size><AbsDimension x="350" y="120"/></Size>
+        <Anchors>
+            <Anchor point="CENTER" relativeTo="BotBuddyStateFrame" relativePoint="BOTTOM" x="0" y="-20"/>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"/>
+        <Frames>
+            <!-- Title Bar for BotBuddyCommandFrame -->
+            <Frame name="BotBuddyCommandFrameTitleBar" parentKey="TitleBar" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+                <Size><AbsDimension x="0" y="24"/></Size>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark"/>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="BotBuddyCommandFrameTitle" inherits="GameFontNormal" text="BotBuddy Command">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="BotBuddyCommandFrameText" inherits="GameFontHighlightSmall" text="Last command and reasoning will appear here">
+                    <Size><AbsDimension x="320" y="80"/></Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="15" y="-35"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>

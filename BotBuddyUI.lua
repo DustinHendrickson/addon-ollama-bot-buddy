@@ -1,6 +1,13 @@
+local buffers = {
+    state = "",
+    commands = "",
+    locations = "",
+    players = ""
+}
+
 local function ExpandMultiline(text)
     local lines = {}
-    for chunk in string.gmatch(text, "([^|]+)") do
+    for chunk in string.gmatch(text or "", "([^|]+)") do
         chunk = chunk:gsub("^%s+", ""):gsub("%s+$", "")
         table.insert(lines, chunk)
     end
@@ -15,33 +22,62 @@ end
 
 local function UpdateBotBuddyCommand(text)
     if BotBuddyCommandFrameText then
-        local main, reason = text:match("^(.-)%s*Reasoning:%s*(.+)$")
-        if main and reason then
-            BotBuddyCommandFrameText:SetText("Last Command:\n" .. ExpandMultiline(main) .. "\n\nReasoning:\n" .. ExpandMultiline(reason))
-        else
-            BotBuddyCommandFrameText:SetText("Last Command:\n" .. ExpandMultiline(text))
+        local entries = {}
+        for entry in string.gmatch(text, "([^|]+)") do
+            table.insert(entries, entry)
         end
+
+        local output = "Last Commands:\n"
+        for _, entry in ipairs(entries) do
+            output = output .. entry:gsub("^%s+", ""):gsub("%s+$", "") .. "\n"
+        end
+
+        BotBuddyCommandFrameText:SetText(output)
     end
 end
 
-local function UpdateBotBuddyReason(text)
-    if BotBuddyCommandFrameText then
-        local prev = BotBuddyCommandFrameText:GetText() or ""
-        if not prev:find(text, 1, true) then
-            BotBuddyCommandFrameText:SetText(prev .. "\nReasoning:\n" .. ExpandMultiline(text))
-        end
+local function UpdateBotBuddyLocations(text)
+    if BotBuddyLocationsFrameText then
+        BotBuddyLocationsFrameText:SetText(ExpandMultiline(text))
     end
+end
+
+local function UpdateBotBuddyPlayers(text)
+    if BotBuddyPlayersFrameText then
+        BotBuddyPlayersFrameText:SetText(ExpandMultiline(text))
+    end
+end
+
+local function UpdateTextBuffer(section, text, updateFunc)
+    buffers[section] = buffers[section] .. text .. "|"
+    updateFunc(buffers[section])
+    buffers[section] = ""
 end
 
 local function OnChatMsg(event, msg, author, ...)
     local state = msg:match("^%[BUDDY_STATE%]%s*(.+)")
-    if state then UpdateBotBuddyState(state) return end
+    if state then
+        UpdateTextBuffer("state", state, UpdateBotBuddyState)
+        return
+    end
 
-    local cmd = msg:match("^%[BUDDY_COMMAND%]%s*(.+)")
-    if cmd then UpdateBotBuddyCommand(cmd) return end
+    local cmds = msg:match("^%[BUDDY_COMMANDS?%]%s*(.+)")
+    if cmds then
+        UpdateTextBuffer("commands", cmds, UpdateBotBuddyCommand)
+        return
+    end
 
-    local reason = msg:match("^%[BUDDY_REASON%]%s*(.+)")
-    if reason then UpdateBotBuddyReason(reason) return end
+    local locs = msg:match("^%[BUDDY_LOCATIONS%]%s*(.+)")
+    if locs then
+        UpdateTextBuffer("locations", locs, UpdateBotBuddyLocations)
+        return
+    end
+
+    local players = msg:match("^%[BUDDY_PLAYERS%]%s*(.+)")
+    if players then
+        UpdateTextBuffer("players", players, UpdateBotBuddyPlayers)
+        return
+    end
 end
 
 local sysFrame = CreateFrame("Frame")
@@ -106,12 +142,85 @@ local function SetupBotBuddyPanels()
         HookResizeToText(BotBuddyCommandFrame, BotBuddyCommandFrameText, 30, 40)
         BotBuddyCommandFrame:Show()
     end
+
+    if BotBuddyLocationsFrame and BotBuddyLocationsFrameTitleBar and BotBuddyLocationsFrameText then
+        BotBuddyLocationsFrame:SetMovable(true)
+        BotBuddyLocationsFrame:SetResizable(true)
+        BotBuddyLocationsFrame:SetClampedToScreen(true)
+        BotBuddyLocationsFrame:SetMinResize(200, 150)
+        MakeDragHandle(BotBuddyLocationsFrameTitleBar, BotBuddyLocationsFrame)
+        AddResizeGrip(BotBuddyLocationsFrame)
+        HookResizeToText(BotBuddyLocationsFrame, BotBuddyLocationsFrameText, 30, 40)
+        BotBuddyLocationsFrame:Show()
+    end
+
+    if BotBuddyPlayersFrame and BotBuddyPlayersFrameTitleBar and BotBuddyPlayersFrameText then
+        BotBuddyPlayersFrame:SetMovable(true)
+        BotBuddyPlayersFrame:SetResizable(true)
+        BotBuddyPlayersFrame:SetClampedToScreen(true)
+        BotBuddyPlayersFrame:SetMinResize(200, 150)
+        MakeDragHandle(BotBuddyPlayersFrameTitleBar, BotBuddyPlayersFrame)
+        AddResizeGrip(BotBuddyPlayersFrame)
+        HookResizeToText(BotBuddyPlayersFrame, BotBuddyPlayersFrameText, 30, 40)
+        BotBuddyPlayersFrame:Show()
+    end
+end
+
+local BotBuddyOptionsPanel
+local function TogglePanelVisibility(panelName, isVisible)
+    local frame = _G[panelName]
+    if frame then
+        if isVisible then
+            frame:Show()
+        else
+            frame:Hide()
+        end
+    end
+end
+
+local function CreateCheckbox(name, parent, label, x, y, initialValue, onClick)
+    local cb = CreateFrame("CheckButton", name, parent, "InterfaceOptionsCheckButtonTemplate")
+    cb:SetPoint("TOPLEFT", x, y)
+    local text = _G[cb:GetName() .. "Text"]
+    if text then text:SetText(label) end
+    cb:SetChecked(initialValue)
+    cb:SetScript("OnClick", function(self)
+        local checked = self:GetChecked()
+        onClick(checked)
+    end)
+    return cb
+end
+
+local function CreateOptionsPanel()
+    BotBuddyOptionsPanel = CreateFrame("Frame", "BotBuddyOptionsPanel", UIParent)
+    BotBuddyOptionsPanel.name = "BotBuddy UI"
+
+    local title = BotBuddyOptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+    title:SetPoint("TOPLEFT", 16, -16)
+    title:SetText("BotBuddy UI Settings")
+
+    CreateCheckbox("BotBuddyShowState", BotBuddyOptionsPanel, "Show Bot State Panel", 16, -50, true, function(checked)
+        TogglePanelVisibility("BotBuddyStateFrame", checked)
+    end)
+
+    CreateCheckbox("BotBuddyShowCommands", BotBuddyOptionsPanel, "Show Commands Panel", 16, -80, true, function(checked)
+        TogglePanelVisibility("BotBuddyCommandFrame", checked)
+    end)
+
+    CreateCheckbox("BotBuddyShowLocations", BotBuddyOptionsPanel, "Show Locations Panel", 16, -110, true, function(checked)
+        TogglePanelVisibility("BotBuddyLocationsFrame", checked)
+    end)
+
+    CreateCheckbox("BotBuddyShowPlayers", BotBuddyOptionsPanel, "Show Players Panel", 16, -140, true, function(checked)
+        TogglePanelVisibility("BotBuddyPlayersFrame", checked)
+    end)
+
+    InterfaceOptions_AddCategory(BotBuddyOptionsPanel)
 end
 
 local frameLoader = CreateFrame("Frame")
 frameLoader:RegisterEvent("PLAYER_ENTERING_WORLD")
 frameLoader:SetScript("OnEvent", function()
+    CreateOptionsPanel()
     SetupBotBuddyPanels()
 end)
-
-SetupBotBuddyPanels()

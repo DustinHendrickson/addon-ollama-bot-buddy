@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
+
     <Frame name="BotBuddyStateFrame" parent="UIParent" movable="true" enableMouse="true" frameStrata="HIGH">
         <Size><AbsDimension x="350" y="200"/></Size>
         <Anchors>
@@ -6,7 +7,6 @@
         </Anchors>
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"/>
         <Frames>
-            <!-- Title Bar for BotBuddyStateFrame -->
             <Frame name="BotBuddyStateFrameTitleBar" parentKey="TitleBar" enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
@@ -27,7 +27,7 @@
         </Frames>
         <Layers>
             <Layer level="ARTWORK">
-                <FontString name="BotBuddyStateFrameText" inherits="GameFontHighlightSmall" text="Bot State will appear here">
+                <FontString name="BotBuddyStateFrameText" inherits="GameFontHighlightSmall" text="Bot State will appear here" justifyH="LEFT">
                     <Size><AbsDimension x="320" y="160"/></Size>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="15" y="-35"/>
@@ -44,7 +44,6 @@
         </Anchors>
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"/>
         <Frames>
-            <!-- Title Bar for BotBuddyCommandFrame -->
             <Frame name="BotBuddyCommandFrameTitleBar" parentKey="TitleBar" enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
@@ -54,7 +53,7 @@
                 <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark"/>
                 <Layers>
                     <Layer level="OVERLAY">
-                        <FontString name="BotBuddyCommandFrameTitle" inherits="GameFontNormal" text="BotBuddy Command">
+                        <FontString name="BotBuddyCommandFrameTitle" inherits="GameFontNormal" text="BotBuddy Commands">
                             <Anchors>
                                 <Anchor point="CENTER"/>
                             </Anchors>
@@ -65,7 +64,7 @@
         </Frames>
         <Layers>
             <Layer level="ARTWORK">
-                <FontString name="BotBuddyCommandFrameText" inherits="GameFontHighlightSmall" text="Last command and reasoning will appear here">
+                <FontString name="BotBuddyCommandFrameText" inherits="GameFontHighlightSmall" text="Last 5 commands and reasoning will appear here" justifyH="LEFT">
                     <Size><AbsDimension x="320" y="80"/></Size>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="15" y="-35"/>
@@ -74,4 +73,79 @@
             </Layer>
         </Layers>
     </Frame>
+
+    <Frame name="BotBuddyLocationsFrame" parent="UIParent" movable="true" enableMouse="true" frameStrata="HIGH">
+        <Size><AbsDimension x="350" y="160"/></Size>
+        <Anchors>
+            <Anchor point="CENTER" relativeTo="BotBuddyCommandFrame" relativePoint="BOTTOM" x="0" y="-20"/>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"/>
+        <Frames>
+            <Frame name="BotBuddyLocationsFrameTitleBar" parentKey="TitleBar" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+                <Size><AbsDimension x="0" y="24"/></Size>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark"/>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="BotBuddyLocationsFrameTitle" inherits="GameFontNormal" text="Visible Locations/Objects">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="BotBuddyLocationsFrameText" inherits="GameFontHighlightSmall" text="Visible Locations/Objects will appear here" justifyH="LEFT">
+                    <Size><AbsDimension x="320" y="120"/></Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="15" y="-35"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="BotBuddyPlayersFrame" parent="UIParent" movable="true" enableMouse="true" frameStrata="HIGH">
+        <Size><AbsDimension x="350" y="120"/></Size>
+        <Anchors>
+            <Anchor point="CENTER" relativeTo="BotBuddyLocationsFrame" relativePoint="BOTTOM" x="0" y="-20"/>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"/>
+        <Frames>
+            <Frame name="BotBuddyPlayersFrameTitleBar" parentKey="TitleBar" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+                <Size><AbsDimension x="0" y="24"/></Size>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark"/>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="BotBuddyPlayersFrameTitle" inherits="GameFontNormal" text="Visible Players">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="BotBuddyPlayersFrameText" inherits="GameFontHighlightSmall" text="Visible Players will appear here" justifyH="LEFT">
+                    <Size><AbsDimension x="320" y="80"/></Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="15" y="-35"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
 </Ui>
